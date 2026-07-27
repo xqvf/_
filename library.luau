@@ -2999,7 +2999,7 @@ function Library:Notify(Text, Time)
 		Position = UDim2.new(0, 4, 0, 0);
 		Size = UDim2.new(1, -4, 1, 0);
 		Text = Text;
-		TextXAlignment = Enum['TextXAlignment']['Center'];;
+		TextXAlignment = Enum['TextXAlignment']['Center'];
 		TextSize = 14;
 		ZIndex = 103;
 		Parent = InnerFrame;
