@@ -1,4 +1,4 @@
-local InputService = cloneref(game:GetService('UserInputService');)
+local InputService = cloneref(game:GetService('UserInputService'));
 local text_service = cloneref(game:GetService('TextService'));
 local CoreGui = gethui and gethui() or cloneref(game:GetService('CoreGui'));
 local teams = cloneref(game:GetService('Teams'));
