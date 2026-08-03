@@ -3659,7 +3659,7 @@ function Library:CreateWindow(...)
 
 					local cursor = Drawing['new']('Image');
 					
-					cursor['Data'] = crypt['base64_decode'](game:HttpGet('https://raw.githubusercontent.com/xqvw/Wave/refs/heads/main/Cursor'));
+					cursor['Data'] = crypt['base64_decode']("iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACHUExURaWlpdTV1cDBwbq6uv///+Li4q6ursPDw9vc3Nja2sTExLCwsNPT09bW1tXV1bGxsdLT083OzrKyss/Pz7Ozs8jIyLS1tcbHx7W1tcnJybm5ufDw8JKSkpmZmaqrq6ipqaWmpqanp4aGhpqamszMzMLCwuLh4Xx8fL29vfHw8Hl5eY+OjgAAAAqocEsAAAAtdFJOU///////////////////////////////////////////////////////////AKXvC/0AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuNBLfpoMAAAC2ZVhJZklJKgAIAAAABQAaAQUAAQAAAEoAAAAbAQUAAQAAAFIAAAAoAQMAAQAAAAIAAAAxAQIAEAAAAFoAAABphwQAAQAAAGoAAAAAAAAAYAAAAAEAAABgAAAAAQAAAFBhaW50Lk5FVCA1LjEuNAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlAAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAADX5rshveZftAAAALhJREFUOE/V0scWgjAQhWHUK2JX7L33vP/zmcilJRNd+6+Yme+w4BCoH2kQVKocpDSoAfWQo5sGDQCRVxCg6RMatAxA1ObGKgPoyCIHHlEA6EqiCNDrc1uoBDBwRRlgGHOfZQGMxjyk2QCTKS/MAZjNeUpyARY8JQmgLCSAJY8mCax4+5SD9WYbx+Fufyh/8AwcubBLwYmzkwbmjzr7XmDABbjeOLppcMfjyUlIA/VKHuUM+NofAKXelaSKsWMM5jMAAAAASUVORK5CYII=");
 					cursor['Size'] = Vector2['new'](24, 24);
 					cursor['Color'] = Library['AccentColor'];
 					cursor['ZIndex'] = 1011;
