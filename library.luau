@@ -1,6 +1,6 @@
 local InputService = cloneref(game:GetService('UserInputService'));
 local text_service = cloneref(game:GetService('TextService'));
-local CoreGui = gethui and gethui() or cloneref(game:GetService('CoreGui'));
+local CoreGui = gethui()
 local teams = cloneref(game:GetService('Teams'));
 local players = cloneref(game:GetService('Players'));
 local run_service = cloneref(game:GetService('RunService'));
@@ -3632,7 +3632,7 @@ function Library:CreateWindow(...)
 		Text = '';
 		Modal = false;
 		Parent = Library:Create("ScreenGui", {
-			Parent = game:GetService("CoreGui");
+			Parent = geth
 		});
 	});
 
