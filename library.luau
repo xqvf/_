@@ -1,6 +1,5 @@
 local InputService = cloneref(game:GetService('UserInputService'));
 local text_service = cloneref(game:GetService('TextService'));
-local CoreGui = gethui()
 local teams = cloneref(game:GetService('Teams'));
 local players = cloneref(game:GetService('Players'));
 local run_service = cloneref(game:GetService('RunService'));
@@ -9,17 +8,19 @@ local RenderStepped = run_service['RenderStepped'];
 local LocalPlayer = players['LocalPlayer'];
 local Mouse = LocalPlayer:GetMouse();
 
+local protect_gui = protectgui or (syn and syn.protect_gui) or function() end
+
 local ScreenGui = Instance['new']('ScreenGui');
 
+local ScreenGui = Instance['new']('ScreenGui');
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
-ScreenGui.Parent = CoreGui;
 ScreenGui.DisplayOrder = 20;
+
+protect_gui(ScreenGui);
+ScreenGui.Parent = gethui();
 
 local Toggles = {};
 local Options = {};
-
-getgenv().Toggles = Toggles;
-getgenv().Options = Options;
 
 local Library = {
 	Registry = {};
@@ -3753,4 +3754,6 @@ players.PlayerAdded:Connect(OnPlayerChange);
 players.PlayerRemoving:Connect(OnPlayerChange);
 
 getgenv().Library = Library
+getgenv().Toggles = Toggles;
+getgenv().Options = Options;
 return Library
