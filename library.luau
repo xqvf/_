@@ -1,5 +1,6 @@
 local InputService = cloneref(game:GetService('UserInputService'));
 local text_service = cloneref(game:GetService('TextService'));
+local CoreGui = gethui and gethui() or cloneref(game:GetService('CoreGui'));
 local teams = cloneref(game:GetService('Teams'));
 local players = cloneref(game:GetService('Players'));
 local run_service = cloneref(game:GetService('RunService'));
@@ -8,19 +9,17 @@ local RenderStepped = run_service['RenderStepped'];
 local LocalPlayer = players['LocalPlayer'];
 local Mouse = LocalPlayer:GetMouse();
 
-local protect_gui = protectgui or (syn and syn.protect_gui) or function() end
-
 local ScreenGui = Instance['new']('ScreenGui');
 
-local ScreenGui = Instance['new']('ScreenGui');
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
+ScreenGui.Parent = CoreGui;
 ScreenGui.DisplayOrder = 20;
-
-protect_gui(ScreenGui);
-ScreenGui.Parent = gethui();
 
 local Toggles = {};
 local Options = {};
+
+getgenv().Toggles = Toggles;
+getgenv().Options = Options;
 
 local Library = {
 	Registry = {};
@@ -55,12 +54,12 @@ local Hue = 0
 table.insert(Library.Signals, RenderStepped:Connect(function(Delta)
 	RainbowStep = RainbowStep + Delta
 
-	if RainbowStep >= (1 / 60) then
+	if (RainbowStep >= (1 / 60)) then
 		RainbowStep = 0
 
 		Hue = Hue + (1 / 400);
 
-		if Hue > 1 then
+		if (Hue > 1) then
 			Hue = 0;
 		end;
 
@@ -98,16 +97,16 @@ function Library:SafeCallback(f, ...)
 		return;
 	end;
 
-	if not Library.NotifyOnError then
+	if not (Library['NotifyOnError']) then
 		return f(...);
 	end;
 
 	local success, event = pcall(f, ...);
 
-	if not success then
+	if not (success) then
 		local _, i = event:find(":%d+: ");
 
-		if not i then
+		if not (i) then
 			return Library:Notify(event);
 		end;
 
@@ -116,16 +115,16 @@ function Library:SafeCallback(f, ...)
 end;
 
 function Library:AttemptSave()
-	if Library.SaveManager then
-		Library.SaveManager:Save();
+	if (Library['SaveManager']) then
+		Library['SaveManager']:Save();
 	end;
 end;
 
 function Library:Create(Class, Properties)
 	local _Instance = Class;
 
-	if type(Class) == 'string' then
-		_Instance = Instance.new(Class);
+	if (type(Class) == 'string') then
+		_Instance = Instance['new'](Class);
 	end;
 
 	for Property, Value in next, Properties do
@@ -168,13 +167,13 @@ function Library:MakeDraggable(Instance, Cutoff)
 	Instance.Active = true;
 
 	Instance.InputBegan:Connect(function(Input)
-		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-			local ObjPos = Vector2.new(
-				Mouse.X - Instance.AbsolutePosition.X,
-				Mouse.Y - Instance.AbsolutePosition.Y
+		if (Input['UserInputType'] == Enum['UserInputType']['MouseButton1']) then
+			local ObjPos = Vector2['new'](
+				Mouse.X - Instance['AbsolutePosition']['X'],
+				Mouse.Y - Instance['AbsolutePosition']['Y']
 			);
 
-			if ObjPos.Y > (Cutoff or 40) then
+			if (ObjPos.Y > (Cutoff or 40)) then
 				return;
 			end;
 
@@ -2130,12 +2129,15 @@ do
 		end;
 
 		local function Round(Value)
+			if Info.Rounded then
+				return math.round(Value / Info.Rounded) * Info.Rounded;
+			end;
+
 			if Slider.Rounding == 0 then
 				return math.floor(Value);
 			end;
 
-
-			return tonumber(string.format('%.' .. Slider.Rounding .. 'f', Value))
+			return tonumber(string.format('%.' .. Slider.Rounding .. 'f', Value));
 		end;
 
 		function Slider:GetValueFromXOffset(X)
@@ -3633,7 +3635,7 @@ function Library:CreateWindow(...)
 		Text = '';
 		Modal = false;
 		Parent = Library:Create("ScreenGui", {
-			Parent = geth
+			Parent = game:GetService("CoreGui");
 		});
 	});
 
@@ -3660,7 +3662,7 @@ function Library:CreateWindow(...)
 
 					local cursor = Drawing['new']('Image');
 					
-					cursor['Data'] = crypt['base64_decode']("iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACHUExURaWlpdTV1cDBwbq6uv///+Li4q6ursPDw9vc3Nja2sTExLCwsNPT09bW1tXV1bGxsdLT083OzrKyss/Pz7Ozs8jIyLS1tcbHx7W1tcnJybm5ufDw8JKSkpmZmaqrq6ipqaWmpqanp4aGhpqamszMzMLCwuLh4Xx8fL29vfHw8Hl5eY+OjgAAAAqocEsAAAAtdFJOU///////////////////////////////////////////////////////////AKXvC/0AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuNBLfpoMAAAC2ZVhJZklJKgAIAAAABQAaAQUAAQAAAEoAAAAbAQUAAQAAAFIAAAAoAQMAAQAAAAIAAAAxAQIAEAAAAFoAAABphwQAAQAAAGoAAAAAAAAAYAAAAAEAAABgAAAAAQAAAFBhaW50Lk5FVCA1LjEuNAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlAAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAADX5rshveZftAAAALhJREFUOE/V0scWgjAQhWHUK2JX7L33vP/zmcilJRNd+6+Yme+w4BCoH2kQVKocpDSoAfWQo5sGDQCRVxCg6RMatAxA1ObGKgPoyCIHHlEA6EqiCNDrc1uoBDBwRRlgGHOfZQGMxjyk2QCTKS/MAZjNeUpyARY8JQmgLCSAJY8mCax4+5SD9WYbx+Fufyh/8AwcubBLwYmzkwbmjzr7XmDABbjeOLppcMfjyUlIA/VKHuUM+NofAKXelaSKsWMM5jMAAAAASUVORK5CYII=");
+					cursor['Data'] = crypt['base64_decode'](game:HttpGet('https://raw.githubusercontent.com/xqvw/Wave/refs/heads/main/Cursor'));
 					cursor['Size'] = Vector2['new'](24, 24);
 					cursor['Color'] = Library['AccentColor'];
 					cursor['ZIndex'] = 1011;
@@ -3754,6 +3756,4 @@ players.PlayerAdded:Connect(OnPlayerChange);
 players.PlayerRemoving:Connect(OnPlayerChange);
 
 getgenv().Library = Library
-getgenv().Toggles = Toggles;
-getgenv().Options = Options;
 return Library
