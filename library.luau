@@ -2130,7 +2130,8 @@ do
 
 		local function Round(Value)
 			if Info.Rounded then
-				return math.round(Value / Info.Rounded) * Info.Rounded;
+				local stepped = math.round(Value / Info.Rounded) * Info.Rounded;
+				return math.clamp(stepped, Slider.Min, Slider.Max);
 			end;
 
 			if Slider.Rounding == 0 then
