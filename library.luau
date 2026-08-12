@@ -2131,7 +2131,11 @@ do
 		local function Round(Value)
 			if Info.Rounded then
 				local stepped = math.round(Value / Info.Rounded) * Info.Rounded;
-				return math.clamp(stepped, Slider.Min, Slider.Max);
+				stepped = math.clamp(stepped, Slider.Min, Slider.Max);
+				if stepped < Slider.Min then
+					stepped = math.ceil(Slider.Min / Info.Rounded) * Info.Rounded;
+				end;
+				return stepped;
 			end;
 
 			if Slider.Rounding == 0 then
