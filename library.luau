@@ -58,6 +58,7 @@ local Library = {
 };
 
 local ui_visible = false;
+local touch = InputService.TouchEnabled;
 local RainbowStep = 0
 local Hue = 0
 
@@ -2218,8 +2219,8 @@ do
 		end;
 
 		ToggleRegion.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-				Toggle:SetValue(not Toggle.Value)
+			if (Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch) and not Library:MouseIsOverOpenedFrame() then -- // Should let mobile users use toggles?
+				Toggle:SetValue(not Toggle.Value);
 				Library:AttemptSave();
 			end;
 		end);
