@@ -18,7 +18,7 @@ local TweenService = cloneref(game:GetService('TweenService'));
 local ScreenGui = Instance.new("ScreenGui");
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
 ScreenGui.Parent = hui;
-ScreenGui.DisplayOrder = 20;
+ScreenGui.DisplayOrder = 0;
 
 local Toggles = {};
 local Options = {};
@@ -2458,6 +2458,7 @@ do
 			end;
 		end
 
+		
 		SliderInner.InputBegan:Connect(function(Input)
 			if (Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch) and not Library:MouseIsOverOpenedFrame() then
 				local mPos = touch and Input.Position.X or Mouse.X;
@@ -2514,6 +2515,7 @@ do
 				end;
 			end;
 		end);
+
 
 		local contextmenu = Library:AddContextMenu(SliderInner);
 		contextmenu:AddOption('Copy Flag', function()
@@ -2849,7 +2851,7 @@ do
 				end;
 
 				ButtonLabel.InputBegan:Connect(function(Input)
-					if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 						local Try = not Selected;
 
 						if Dropdown:GetActiveValues() == 1 and (not Try) and (not Info.AllowNull) then
@@ -2966,7 +2968,7 @@ do
 		end;
 
 		DropdownOuter.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
+			if (Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch) and not Library:MouseIsOverOpenedFrame() then
 				if ListOuter.Visible then
 					Dropdown:CloseDropdown();
 				else
@@ -2975,17 +2977,19 @@ do
 			end;
 		end);
 
-		Library:BindToInput(Enum.UserInputType.MouseButton1, function()
+		local function do_dropdown_outer()
 			if (not _visible) then
 				return;
 			end;
 			local AbsPos, AbsSize = ListOuter.AbsolutePosition, ListOuter.AbsoluteSize;
 			if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
 				or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
-
 				Dropdown:CloseDropdown();
 			end;
-		end);
+		end;
+
+		Library:BindToInput(Enum.UserInputType.MouseButton1, do_dropdown_outer);
+		Library:BindToInput(Enum.UserInputType.Touch, do_dropdown_outer);
 
 		local contextmenu = Library:AddContextMenu(DropdownOuter);
 		contextmenu:AddOption('Copy Flag', function()
