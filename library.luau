@@ -57,8 +57,7 @@ local Library = {
 	ScreenGui = ScreenGui;
 };
 
-local _UI_IS_VISIBLE = false;
-
+local ui_visible = false;
 local RainbowStep = 0
 local Hue = 0
 
@@ -464,7 +463,7 @@ function Library:BindToInput(key, callback)
 end;
 
 Library:GiveSignal(InputService.InputBegan:Connect(function(input, ...)
-	if (not _UI_IS_VISIBLE) then
+	if (not ui_visible) then
 		return;
 	end;
 	local callbacks = _callbacks[input.KeyCode] or _callbacks[input.UserInputType];
@@ -614,7 +613,7 @@ function Library:AddContextMenu(DisplayFrame, hitbox)
 end;
 
 Library:GiveSignal(ScreenGui.DescendantRemoving:Connect(function(Instance)
-	if _UI_IS_VISIBLE and Library.RegistryMap[Instance] then
+	if ui_visible and Library.RegistryMap[Instance] then
 		Library:RemoveFromRegistry(Instance);
 	end;
 end))
@@ -2405,13 +2404,20 @@ do
 		end;
 
 		local function Round(Value)
-			if (Slider.Increment) then
-				return math.round(Value / Slider.Increment) * Slider.Increment;
-			elseif Slider.Rounding == 0 then
+			if Info.Rounded then
+				local stepped = math.round(Value / Info.Rounded) * Info.Rounded;
+				stepped = math.clamp(stepped, Slider.Min, Slider.Max);
+				if stepped < Slider.Min then
+					stepped = math.ceil(Slider.Min / Info.Rounded) * Info.Rounded;
+				end;
+				return stepped;
+			end;
+
+			if Slider.Rounding == 0 then
 				return math.floor(Value);
 			end;
 
-			return tonumber(string.format('%.' .. Slider.Rounding .. 'f', Value))
+			return tonumber(string.format('%.' .. Slider.Rounding .. 'f', Value));
 		end;
 
 		function Slider:GetValueFromXOffset(X)
@@ -3566,7 +3572,7 @@ function Library:Notify(Text, Time)
 end;
 
 function Library:IsVisible()
-	return _UI_IS_VISIBLE;
+	return ui_visible;
 end;
 
 Library:CreateEvent("VisibilityChanged");
@@ -3581,7 +3587,7 @@ function Library:CreateWindow(...)
 		Config.Title = Arguments[1]
 		Config.AutoShow = Arguments[2] or false;
 	end
-	_UI_IS_VISIBLE = Config.AutoShow;
+	ui_visible = Config.AutoShow;
 	if type(Config.Title) ~= 'string' then Config.Title = 'No title' end
 	if type(Config.TabPadding) ~= 'number' then Config.TabPadding = 0 end
 	if type(Config.MenuFadeTime) ~= 'number' then Config.MenuFadeTime = 0.2 end
