@@ -18,7 +18,7 @@ local TweenService = cloneref(game:GetService('TweenService'));
 local ScreenGui = Instance.new("ScreenGui");
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
 ScreenGui.Parent = hui;
-ScreenGui.DisplayOrder = 0;
+ScreenGui.DisplayOrder = -768;
 
 local Toggles = {};
 local Options = {};
