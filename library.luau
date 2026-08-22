@@ -2459,30 +2459,59 @@ do
 		end
 
 		SliderInner.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-				local mPos = Mouse.X;
+			if (Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch) and not Library:MouseIsOverOpenedFrame() then
+				local mPos = touch and Input.Position.X or Mouse.X;
 				local gPos = Fill.Size.X.Offset;
 				local Diff = mPos - (Fill.AbsolutePosition.X + gPos);
 
-				while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-					local nMPos = Mouse.X;
-					local nX = math.clamp(gPos + (nMPos - mPos) + Diff, 0, Slider.MaxSize);
+				if touch then
+					local connection;
+					connection = InputService.InputChanged:Connect(function(Changed)
+						if Changed.UserInputType == Enum.UserInputType.Touch then
+							local nX = math.clamp(gPos + (Changed.Position.X - mPos) + Diff, 0, Slider.MaxSize);
 
-					local nValue = Slider:GetValueFromXOffset(nX);
-					local OldValue = Slider.Value;
-					Slider.Value = nValue;
+							local nValue = Slider:GetValueFromXOffset(nX);
+							local OldValue = Slider.Value;
+							Slider.Value = nValue;
 
-					Slider:Display();
+							Slider:Display();
 
-					if nValue ~= OldValue then
-						Library:SafeCallback(Slider.Callback, Slider.Value);
-						Library:SafeCallback(Slider.Changed, Slider.Value);
+							if nValue ~= OldValue then
+								Library:SafeCallback(Slider.Callback, Slider.Value);
+								Library:SafeCallback(Slider.Changed, Slider.Value);
+							end;
+						end;
+					end);
+
+					local end_connection;
+					end_connection = InputService.InputEnded:Connect(function(Ended)
+						if Ended.UserInputType == Enum.UserInputType.Touch then
+							connection:Disconnect();
+							end_connection:Disconnect();
+							Library:AttemptSave();
+						end;
+					end);
+				else
+					while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
+						local nMPos = Mouse.X;
+						local nX = math.clamp(gPos + (nMPos - mPos) + Diff, 0, Slider.MaxSize);
+
+						local nValue = Slider:GetValueFromXOffset(nX);
+						local OldValue = Slider.Value;
+						Slider.Value = nValue;
+
+						Slider:Display();
+
+						if nValue ~= OldValue then
+							Library:SafeCallback(Slider.Callback, Slider.Value);
+							Library:SafeCallback(Slider.Changed, Slider.Value);
+						end;
+
+						RenderStepped:Wait();
 					end;
 
-					RenderStepped:Wait();
+					Library:AttemptSave();
 				end;
-
-				Library:AttemptSave();
 			end;
 		end);
 
